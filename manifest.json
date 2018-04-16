@@ -1,0 +1,31 @@
+{
+  "name": "ChromeJanitor",
+  "version": "0.5",
+  "description": "Keeps it clean.",
+  "permissions": [
+    "alarms",
+    "browsingData",
+    "declarativeContent",
+    "storage"
+  ],
+  "background": {
+    "scripts": ["scripts/main.js", "background.js"],
+    "persistent": true
+  },
+  "options_page": "pages/options/options.html",
+  "browser_action": {
+    "default_popup": "pages/popup/popup.html",
+    "default_title": "ChromeJanitor Configuration",
+    "icons": {
+      "16": "images/broom.png",
+      "48": "images/broom.png",
+      "128": "images/broom.png"
+    }
+  },
+  "icons": {
+    "16": "images/broom.png",
+    "48": "images/broom.png",
+    "128": "images/broom.png"
+  },
+  "manifest_version": 2
+}

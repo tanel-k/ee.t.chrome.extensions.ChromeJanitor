@@ -1,0 +1,1 @@
+withConfig(function(cfg) {})();
