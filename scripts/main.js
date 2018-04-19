@@ -3,7 +3,9 @@ const DEFAULT_PERIOD = 30;
 const PAUSED_ICON = "/images/broom-paused.png";
 const UNPAUSED_ICON = "/images/broom.png";
 const DEFAULT_CONFIG = {
+  isPaused: false,
   periodInMinutes: DEFAULT_PERIOD,
+  nextTrigger: null,
   historyConfig: {
     clearSiteCache: true,
     clearFileCache: true,
@@ -50,28 +52,52 @@ function flipIcon(cfg) {
 
 function handleAlarm(alarm, cfg) {
   if (alarm.name == ALARM_CLEANUP) {
+    let nextTrigger = Date.now() + (cfg.periodInMinutes * 60000);
+
     executeCleaning(cfg);
+
+    cfg.nextTrigger = nextTrigger;
+    storeConfig(cfg);
   }
 }
 
-function startAlarm() {
+function startAlarm(cb) {
   withConfig(function(cfg) {
+    let initMillis = Date.now() + (cfg.periodInMinutes * 60000)
+
     chrome.alarms.create(ALARM_CLEANUP, {
-      when: Date.now() + (cfg.periodInMinutes * 60000),
+      when: initMillis,
       periodInMinutes: cfg.periodInMinutes
     });
+
     chrome.alarms.onAlarm.addListener(withConfig(handleAlarm));
+
+    if (typeof cb == 'function') {
+      cb(cfg);
+    }
+
+    cfg.nextTrigger = initMillis;
+    storeConfig(cfg);
   })();
 }
 
-function clearAlarm() {
-  chrome.alarms.clear(ALARM_CLEANUP);
+function clearAlarm(cb) {
+  withConfig(function(cfg) {
+    chrome.alarms.clear(ALARM_CLEANUP);
+
+    if (typeof cb == 'function') {
+      cb(cfg);
+    }
+
+    cfg.nextTrigger = null;
+    storeConfig(cfg);
+  })();
 }
 
 function storeConfig(cfg) {
-  cfg = cfg || DEFAULT_CONFIG;
-  chrome.storage.sync.set({'config': cfg});
-  return cfg;
+  let config = cfg || DEFAULT_CONFIG;
+  chrome.storage.sync.set({'config': config});
+  return config;
 }
 
 function withConfig(cb) {
