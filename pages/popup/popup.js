@@ -40,9 +40,7 @@ withConfig(function(cfg) {
   
   cleanBtn.addEventListener('click', function() {
     withConfig(function(cfg) {
-      runClean(cfg);
-      
-      // FIXME: the icon swap won't apply if the pop-up is closed immediately
+      executeCleaning(cfg);
       exit();
     })();
   });

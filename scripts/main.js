@@ -19,14 +19,12 @@ const DEFAULT_CONFIG = {
  * https://developer.chrome.com/extensions/browsingData
  */
 function cleanHistory(cfg) {
-  let cb = function() {
-    // TODO
-  };
-  
+  let cb = function() {};
+
   chrome.browsingData.remove({
-    "since": 0,
-    "originTypes": {
-      "protectedWeb": true
+    since: 0,
+    originTypes: {
+      protectedWeb: true
     }
   }, {
     appcache: cfg.historyConfig.clearSiteCache,
@@ -38,7 +36,7 @@ function cleanHistory(cfg) {
   }, cb);
 }
 
-function runClean(cfg) {
+function executeCleaning(cfg) {
   cleanHistory(cfg);
 }
 
@@ -52,13 +50,14 @@ function flipIcon(cfg) {
 
 function handleAlarm(alarm, cfg) {
   if (alarm.name == ALARM_CLEANUP) {
-    runClean(cfg);
+    executeCleaning(cfg);
   }
 }
 
 function startAlarm() {
   withConfig(function(cfg) {
     chrome.alarms.create(ALARM_CLEANUP, {
+      when: Date.now() + (cfg.periodInMinutes * 60000),
       periodInMinutes: cfg.periodInMinutes
     });
     chrome.alarms.onAlarm.addListener(withConfig(handleAlarm));
