@@ -1,6 +1,6 @@
 {
   "name": "ChromeJanitor",
-  "version": "0.7",
+  "version": "0.9",
   "description": "Keeps it clean.",
   "permissions": [
     "alarms",

@@ -63,7 +63,14 @@ function handleAlarm(alarm, cfg) {
 
 function startAlarm(cb) {
   withConfig(function(cfg) {
-    let initMillis = Date.now() + (cfg.periodInMinutes * 60000)
+    let nowMillis = Date.now();
+
+    let initMillis;
+    if (cfg['nextTrigger'] && cfg['nextTrigger'] > (nowMillis + 1000)) {
+      initMillis = cfg.nextTrigger;
+    } else {
+      initMillis = nowMillis  + (cfg.periodInMinutes * 60000);
+    }
 
     chrome.alarms.create(ALARM_CLEANUP, {
       when: initMillis,

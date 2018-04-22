@@ -57,7 +57,7 @@ withConfig(function(_cfg) {
       return;
     }
 
-    if (cfg.nextTrigger) {
+    if (cfg['nextTrigger']) {
       let millisLeft = cfg.nextTrigger - Date.now();
       countdownLabel.innerText = formatInterval(millisLeft);
     }
@@ -93,7 +93,7 @@ withConfig(function(_cfg) {
       });
 
       // FIXME: the icon swap won't apply if the pop-up is closed immediately
-      // setTimeout(exit, TIMEOUT_DELAY);
+      setTimeout(exit, TIMEOUT_DELAY);
     })();
   });
 
